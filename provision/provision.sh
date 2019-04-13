@@ -1,7 +1,7 @@
 #!/bin/bash
 
 HOSTS=$(head -n7 /etc/hosts)
-echo -e '$HOSTS' > /etc/hosts
+echo -e "$HOSTS" > /etc/hosts
 echo '192.168.10.10 master.k8s.com' >> /etc/hosts
 echo '192.168.10.20 minion1.k8s.com' >> /etc/hosts
 echo '192.168.10.30 minion2.k8s.com' >> /etc/hosts
