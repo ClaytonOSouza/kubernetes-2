@@ -5,7 +5,7 @@ vms = {
 	'master' => {'memory' => '2048', 'cpus' => '2', 'ip' => '10', 'provision' => 'master.sh'},
 	'minion1' => {'memory' => '1024', 'cpus' => '1', 'ip' => '20', 'provision' => 'minion.sh'},
 	'minion2' => {'memory' => '1024', 'cpus' => '1', 'ip' => '30', 'provision' => 'minion.sh'},
-	'minion3' => {'memory' => '512', 'cpus' => '1', 'ip' => '40', 'provision' => 'minion.sh'}
+	'storage' => {'memory' => '512', 'cpus' => '1', 'ip' => '40', 'provision' => 'storage.sh'}
 }
 
 Vagrant.configure('2') do |config|
@@ -16,7 +16,7 @@ Vagrant.configure('2') do |config|
 	vms.each do |name, conf|
 		config.vm.define "#{name}" do |k|
 		k.vm.hostname = "#{name}.k8s.com"
-		k.vm.network 'private_network', ip: "192.168.10.#{conf['ip']}"
+		k.vm.network 'private_network', ip: "27.11.90.#{conf['ip']}"
 		k.vm.provider 'virtualbox' do |vb|
 			vb.memory = conf['memory']
 			vb.cpus = conf['cpus']

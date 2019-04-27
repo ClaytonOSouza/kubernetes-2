@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: cgi-deploy
+  labels:
+    name: cgi-deploy
+spec:
+  type: NodePort
+  sessionAffinity: ClientIP
+  ports:
+  - port: 8080
+    nodePort: 30000
+  selector:
+    name: cgi-deploy

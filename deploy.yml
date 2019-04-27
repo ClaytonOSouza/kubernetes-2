@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: cgi-deploy
+  labels:
+    name: cgi-deploy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      name: cgi-deploy
+  template:
+    metadata:
+      labels:
+        name: cgi-deploy
+    spec:
+      containers:
+      - name: cgi-deploy
+        image: hectorvido/sh-cgi
+        ports:
+        - containerPort: 8080
