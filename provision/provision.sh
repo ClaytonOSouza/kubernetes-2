@@ -12,7 +12,7 @@ echo '27.11.90.20 minion1.k8s.com' >> /etc/hosts
 echo '27.11.90.30 minion2.k8s.com' >> /etc/hosts
 echo '27.11.90.40 storage.k8s.com' >> /etc/hosts
 
-if [ "$HOSTNAME" == "storage.k8s.com" ]; then
+if [ "$HOSTNAME" == "storage" ]; then
 	exit
 fi
 
