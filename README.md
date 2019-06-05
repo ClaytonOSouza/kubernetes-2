@@ -136,6 +136,75 @@ spec:
         - containerPort: 8080
 ```
 
+# Dashboard
+
+É possível acessar uma aplicação web para visualizar com mais facilidade alguns recursos do Kubernetes:
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v1.10.1/src/deploy/recommended/kubernetes-dashboard.yaml
+```
+
+No caso desta instalação com Vagrant, altere o arquivo de configuração do serviço da dashboard para o tipo NodePort, e verifique a porta disponibilizada pelo serviço:
+```
+kubectl -n kube-system edit service kubernetes-dashboard
+
+### Disso ###
+...
+    targetPort: 8443
+  selector:
+    k8s-app: kubernetes-dashboard
+  sessionAffinity: None
+  type: ClusterIP
+...
+
+### Para isso ###
+...
+    targetPort: 8443
+  selector:
+    k8s-app: kubernetes-dashboard
+  sessionAffinity: None
+  type: NodePort
+...
+
+kubectl -n kube-system get service kubernetes-dashboard
+```
+
+Acesse o endereço "**https://192.168.10.10:<port>**" para abrir a dashboard.
+
+Para entrar na dashboard, será preciso criar um usuário, uma rola e extrair seu token:
+
+**dashboard-adminuser.yaml**
+```
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: admin-user
+  namespace: kube-system
+```
+
+**clusterrolebinding-admin.yaml**
+```
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: admin-user
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: cluster-admin
+subjects:
+- kind: ServiceAccount
+  name: admin-user
+  namespace: kube-system
+```
+
+Feito isso, aplique as configurações e extraia o token:
+
+```
+kubectl apply -f dashboard-adminuser.yaml
+kubectl apply -f clusterrolebinding-admin.yaml
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep admin-user | awk '{print $1}')
+```
+
 # Secrets e ConfigMaps
 
 Os secrets e os configmaps são capazes de gerar valores que podem ficar disponíveis por todo o cluster, removendo a necessidade de atualizar variáveis de ambiente especificadas a um **Deployment**.
