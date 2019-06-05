@@ -222,25 +222,26 @@ metadata:
   name: lighttpd-config
   labels:
     name: test
-data: |
-  # lighttpd.conf
-  server.modules = (
-      "mod_access",
-      "mod_accesslog"
-  )
-  include "mime-types.conf"
-  server.username      = "lighttpd"
-  server.groupname     = "lighttpd"
-  server.document-root = "/var/www/localhost/htdocs"
-  server.pid-file      = "/run/lighttpd.pid"
-  server.errorlog      = "/var/log/lighttpd/error.log"
-  accesslog.filename   = "/var/log/lighttpd/access.log"
-  server.indexfiles    = ("index.html", "index.sh")
-  static-file.exclude-extensions = (".cgi", ".sh")
-  server.modules += ("mod_cgi")
-  cgi.assign = (
-      ".sh" => "/bin/sh",
-  )
+data:
+  conf: |
+    # lighttpd.conf
+    server.modules = (
+        "mod_access",
+        "mod_accesslog"
+    )
+    include "mime-types.conf"
+    server.username      = "lighttpd"
+    server.groupname     = "lighttpd"
+    server.document-root = "/var/www/localhost/htdocs"
+    server.pid-file      = "/run/lighttpd.pid"
+    server.errorlog      = "/var/log/lighttpd/error.log"
+    accesslog.filename   = "/var/log/lighttpd/access.log"
+    server.indexfiles    = ("index.html", "index.sh")
+    static-file.exclude-extensions = (".cgi", ".sh")
+    server.modules += ("mod_cgi")
+    cgi.assign = (
+        ".sh" => "/bin/sh",
+    )
 ```
 
 Para colocar os valores no secret, devemos codificá-los para base64:
