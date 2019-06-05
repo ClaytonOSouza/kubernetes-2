@@ -159,6 +159,7 @@ kubectl -n kube-system edit service kubernetes-dashboard
 ### Para isso ###
 ...
     targetPort: 8443
+    nodePort: 31000
   selector:
     k8s-app: kubernetes-dashboard
   sessionAffinity: None
@@ -168,9 +169,9 @@ kubectl -n kube-system edit service kubernetes-dashboard
 kubectl -n kube-system get service kubernetes-dashboard
 ```
 
-Acesse o endereço "**https://192.168.10.10:<port>**" para abrir a dashboard.
+Acesse o endereço "**https://192.168.10.10:31000**" para abrir a dashboard.
 
-Para entrar na dashboard, será preciso criar um usuário, uma rola e extrair seu token:
+Para entrar na dashboard, será preciso criar um usuário, uma role e extrair seu token:
 
 **dashboard-adminuser.yaml**
 ```
