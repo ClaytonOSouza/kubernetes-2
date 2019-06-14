@@ -412,6 +412,38 @@ kubectl rollout undo deployment cgi-deploy
 kubectl rollout status deployment cgi-deploy
 ```
 
+## Ingress
+
+Apesar de ser possível expor serviços distribuídos no cluster diretamente com LoadBalancer ou NodePort, existem cenários de roteamento mais avançados. O **ingress** é utilizado para isso, pense nele como uma camada extra de roteamento antes que a requisição chegue ao serviço. Assim como uma aplicação possuí um serviço e seus pods, os recursos do ingress precisam de uma entrada no ingress e um controlador que executa uma lógica customizada. A entrada define a rota e o controlador faz o roteamento.
+Pode ser configurado para fornecer URLs externas para os serviços, terminar o SSL, load balacing, e fornecer nomes para hosts virtuais como vemos em web servers.
+
+Em serviços de cloud como DigitalOcean ou GCP, já existe um controlador de ingress pronto para ser utilizado, mas quando provisionamos o cluster por conta própria, precisamos instalar esse controlador. Um dos mais conveninentes e conhecidos parece ser o **nginx**:
+
+[https://www.nginx.com/products/nginx/kubernetes-ingress-controller](https://www.nginx.com/products/nginx/kubernetes-ingress-controller)
+
+### Instalação
+
+Clone o repositório, troque o diretório por questões de comodidade:
+
+```
+git clone https://github.com/nginxinc/kubernetes-ingress.git
+```
+
+Então, adicione o NameSpace e a ServiceAccount, o Secret com o certificado TLS e o ConfigMap que poderá ser customizado com configurações para o nginx e o Role-Based Access Control para permitir acesso aos segredos:
+
+```
+kubectl apply -f kubernetes-ingress/deployments/common/ns-and-sa.yaml
+kubectl apply -f kubernetes-ingress/deployments/common/default-server-secret.yaml
+kubectl apply -f kubernetes-ingress/deployments/common/nginx-config.yaml
+kubectl apply -f kubernetes-ingress/deployments/rbac/rbac.yaml
+```
+
+Existe a opção de criar um Deployment para especificar onde os pods do ingress ficarão, mas aqui criarei o DaemonSet, para termos um pod em cada node:
+
+```
+kubectl apply -f nginx-ingress/deployments/daemon-set/nginx-ingress.yaml
+```
+
 # RBAC
 
 Podemos limitar que determinados usuários consigam enxergar apenas um determinado namespace por questões de segurança. Para isso precisamos criar 4 objetos:
@@ -736,10 +768,10 @@ Para isso é preciso instalar o [metrics-server](https://github.com/kubernetes-i
 git clone https://github.com/kubernetes-incubator/metrics-server.git
 ```
 
-Para que as métricas funcionem no cluster gerador pelo **Vagrant** é preciso adicionar dois parâmetros ao **command** do container **metric-server**. Um deles especificando o tipo de IP a ser considerado para cada cluster e o outro para os certificados auto-assinados:
+Para que as métricas funcionem no cluster gerador pelo **Vagrant** é preciso adicionar e modificar o padrão **command** do container **metric-server**. Um deles especificando o tipo de IP a ser considerado para cada cluster e o outro para aceitar os certificados auto-assinados:
 
 ```
-vim deploy/1.8+/metrics-server-deployment.yaml
+vim metrics-server/deploy/1.8+/metrics-server-deployment.yaml
       ...
       containers:
       - name: metrics-server
@@ -752,6 +784,18 @@ vim deploy/1.8+/metrics-server-deployment.yaml
         volumeMounts:
         - name: tmp-dir
           mountPath: /tmp
+```
+
+Feito isso, faça o deploy do metric-server no cluster:
+
+```
+kubectl apply -f metrics-server/deploy/1.8+/
+```
+
+Espere em torno de 1 minuto para que o pod de métricas consiga se inicializar, e então verifique seu funcionamento consultando as métricas de uso do cluster:
+
+```
+kubectl top node
 ```
 
 Para testar a aplicação, crie um pequeno deployment e um serviço:
