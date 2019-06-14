@@ -441,8 +441,68 @@ kubectl apply -f kubernetes-ingress/deployments/rbac/rbac.yaml
 Existe a opção de criar um Deployment para especificar onde os pods do ingress ficarão, mas aqui criarei o DaemonSet, para termos um pod em cada node:
 
 ```
-kubectl apply -f nginx-ingress/deployments/daemon-set/nginx-ingress.yaml
+kubectl apply -f kubernetes-ingress/deployments/daemon-set/nginx-ingress.yaml
 ```
+
+Para acelerar as coisas, crie o namespace, o deployment (altere para 4 réplicas) e o serviço através da linha de comando:
+
+```
+kubectl create ns cgi
+kubectl create deployment cgi --image=hectorvido/sh-cgi -n cgi
+kubectl patch deployment cgi -p '{"spec" : {"replicas" : 4}}' -n cgi
+kubectl expose deployment cgi --port 80 --target-port 8080 -n cgi
+kubectl get all -n cgi
+```
+
+Vamos criar um ingress e utilizá-lo para fazer roteamento através de hostname e terminação TLS, isso significa que nosso cluster passará a responder por um host e fará a comunicação segura entre o cliente e o cluster, mas do cluster para o pod a comunicação será comum.
+Antes disso, vamos criar nosso certificado x509 auto-assinado, se você usa *Let's s Encrypt* o processo é o mesmo, você só não precisará gerar o certificado:
+
+```
+# Crie um novo certificado x509 sem criptografia na chave privada.
+# Colocando a chave no arqivo key.pem e o certificado em cert.pem
+openssl req -x509 -nodes -keyout key.pem -out cert.pem
+```
+
+Os certificados utilizados pelo ingress são salvos em um **secret**, portanto obrigatoriamente no formato **base64**. Felizmente existe um comando que facilita esta conversão e criação:
+
+```
+kubectl create secret tls cgi --key key.pem --cert cert.pem -n cgi
+# Para visualizar o arquivo puro, como deveria ser feito:
+kubectl edit secret cgi -n cgi
+```
+
+Com tudo pronto, definiremos o ingress que irá responder pelo **hostname** e apontar para um determinado serviço:
+
+```
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: cgi
+  namespace: cgi
+spec:
+  tls:
+  - hosts:
+    - cgi.example.com
+    secretName: cgi
+  rules:
+  - host: cgi.example.com
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: cgi
+          servicePort: 80
+```
+
+Provisione o serviço no cluster e teste o endereço adicionando o ip de qualquer um dos **minions** no */etc/hosts* ou utilizando o parâmetro --resolv do curl:
+
+```
+kubectl apply -f sh-cgi-ingress.yml
+curl -kL --resolv cgi.example.com:443:27.11.90.20 https://cgi.example.com
+# Ao adicionar no /etc/hosts basta executar "curl cgi.example.com -Lk"
+```
+
+Pelo fato de utilizarmos um certificado auto-assinado, o parâmetro -k é obrigatório para o funcionamento.
 
 # RBAC
 
