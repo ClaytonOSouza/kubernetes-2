@@ -29,6 +29,7 @@ apt-mark hold kubelet kubeadm kubectl
 echo '{
         "exec-opts": ["native.cgroupdriver=systemd"]
 }' > /etc/docker/daemon.json
+systemctl restart docker
 
 sed -Ei 's/(.*swap.*)/#\1/g' /etc/fstab
 swapoff -a
