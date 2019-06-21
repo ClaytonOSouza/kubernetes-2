@@ -26,6 +26,10 @@ apt-get update
 apt-get install -y docker-ce docker-ce-cli containerd.io kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
+echo '{
+        "exec-opts": ["native.cgroupdriver=systemd"]
+}' > /etc/docker/daemon.json
+
 sed -Ei 's/(.*swap.*)/#\1/g' /etc/fstab
 swapoff -a
 usermod -G docker -a vagrant
