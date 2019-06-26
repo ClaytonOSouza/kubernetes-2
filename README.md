@@ -307,6 +307,7 @@ spec:
     volumeMounts:
     - name: config-volume
       mountPath: /etc/lighttpd/lighttpd.conf
+      subPath: lighttpd.conf
   volumes:
   - name: config-volume
     configMap:
@@ -720,7 +721,7 @@ metadata:
   name: nfs-v1
 spec:
   capacity:
-  storage: 256Mi
+    storage: 256Mi
   accessModes:
   - ReadWriteMany
   nfs:
@@ -737,8 +738,21 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 192.168.10.30
+    server: 27.11.90.40
     path: "/volumes/v2"
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: nfs-v3
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+  nfs:
+    server: 27.11.90.40
+    path: "/volumes/v3"
 ```
 
 Para que um usuário possa utilizar um destes volumes, é preciso que um **PersistentVolumeClain** seja criado. Desta forma, um volume persistente que atenda as exigências do pedido passará a estar disponível para ser atachado a algum pod:
