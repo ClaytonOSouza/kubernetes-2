@@ -256,7 +256,7 @@ echo -n 'kub3rn3ts' | base64 #a3ViM3JuM3Rz
 apiVersion: v1
 kind: Secret
 metadata:
-  name: db_secret
+  name: db-secret
   labels:
     name: test
 type: Opaque
@@ -286,22 +286,22 @@ spec:
       - name: HOST
         valueFrom:
           secretKeyRef:
-            name: db_secret
+            name: db-secret
             key: db_host
       - name: PORT
         valueFrom:
           secretKeyRef:
-            name: db_secret
+            name: db-secret
             key: db_port
       - name: USERNAME
         valueFrom:
           secretKeyRef:
-            name: db_secret
+            name: db-secret
             key: db_user
       - name: PASSWORD
         valueFrom:
           secretKeyRef:
-            name: db_secret
+            name: db-secret
             key: db_pass
     volumeMounts:
     - name: config-volume
