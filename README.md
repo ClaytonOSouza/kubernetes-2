@@ -223,8 +223,7 @@ metadata:
   labels:
     name: test
 data:
-  conf: |
-    # lighttpd.conf
+  lighttpd.conf: |
     server.modules = (
         "mod_access",
         "mod_accesslog"
