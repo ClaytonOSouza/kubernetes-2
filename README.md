@@ -305,8 +305,7 @@ spec:
             key: db_pass
     volumeMounts:
     - name: config-volume
-      mountPath: /etc/lighttpd/lighttpd.conf
-      subPath: lighttpd.conf
+      mountPath: /etc/lighttpd/
   volumes:
   - name: config-volume
     configMap:
