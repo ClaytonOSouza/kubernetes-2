@@ -169,7 +169,7 @@ kubectl -n kube-system edit service kubernetes-dashboard
 kubectl -n kube-system get service kubernetes-dashboard
 ```
 
-Acesse o endereço "**https://192.168.10.10:31000**" para abrir a dashboard.
+Acesse o endereço "**https://27.11.90.10:31000**" para abrir a dashboard.
 
 Para entrar na dashboard, será preciso criar um usuário, uma role e extrair seu token:
 
