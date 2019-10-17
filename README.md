@@ -169,7 +169,7 @@ kubectl -n kube-system edit service kubernetes-dashboard
 kubectl -n kube-system get service kubernetes-dashboard
 ```
 
-Acesse o endereço "**https://27.11.90.10:31000**" para abrir a dashboard.
+Acesse o endereço "**https://172.27.11.10:31000**" para abrir a dashboard.
 
 Para entrar na dashboard, será preciso criar um usuário, uma role e extrair seu token:
 
@@ -497,7 +497,7 @@ Provisione o serviço no cluster e teste o endereço adicionando o ip de qualque
 
 ```
 kubectl apply -f sh-cgi-ingress.yml
-curl -kL --resolv cgi.example.com:443:27.11.90.20 https://cgi.example.com
+curl -kL --resolv cgi.example.com:443:172.27.11.20 https://cgi.example.com
 # Ao adicionar no /etc/hosts basta executar "curl cgi.example.com -Lk"
 ```
 
@@ -723,7 +723,7 @@ spec:
   accessModes:
   - ReadWriteMany
   nfs:
-    server: 27.11.90.40
+    server: 172.27.11.40
     path: "/volumes/v1"
 ---
 apiVersion: v1
@@ -736,7 +736,7 @@ spec:
   accessModes:
     - ReadWriteMany
   nfs:
-    server: 27.11.90.40
+    server: 172.27.11.40
     path: "/volumes/v2"
 ---
 apiVersion: v1
@@ -749,7 +749,7 @@ spec:
   accessModes:
     - ReadWriteOnce
   nfs:
-    server: 27.11.90.40
+    server: 172.27.11.40
     path: "/volumes/v3"
 ```
 
