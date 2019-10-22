@@ -7,6 +7,6 @@ mkdir -p /home/vagrant/.kube
 cp /etc/kubernetes/admin.conf ~/.kube/config
 cp /etc/kubernetes/admin.conf /home/vagrant/.kube/config
 chown -R vagrant: /home/vagrant/.kube
-curl -s https://docs.projectcalico.org/v3.6/getting-started/kubernetes/installation/hosted/kubernetes-datastore/calico-networking/1.7/calico.yaml > /root/calico.yml
+curl -s https://docs.projectcalico.org/v3.10/manifests/calico.yaml > /root/calico.yml
 sed -i 's?192.168.0.0/16?10.244.0.0/16?g' /root/calico.yml
 kubectl apply -f /root/calico.yml
