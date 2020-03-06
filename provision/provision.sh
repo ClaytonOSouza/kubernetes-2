@@ -8,8 +8,8 @@ cp /vagrant/files/id_rsa.pub /root/.ssh/authorized_keys
 HOSTS=$(head -n7 /etc/hosts)
 echo -e "$HOSTS" > /etc/hosts
 echo '172.27.11.10 master.k8s.com' >> /etc/hosts
-echo '172.27.11.20 minion1.k8s.com' >> /etc/hosts
-echo '172.27.11.30 minion2.k8s.com' >> /etc/hosts
+echo '172.27.11.20 node1.k8s.com' >> /etc/hosts
+echo '172.27.11.30 node2.k8s.com' >> /etc/hosts
 echo '172.27.11.40 storage.k8s.com' >> /etc/hosts
 
 if [ "$HOSTNAME" == "storage" ]; then
@@ -34,10 +34,10 @@ apt-mark hold kubelet kubeadm kubectl
 echo '{
 	"exec-opts": ["native.cgroupdriver=systemd"],
 	"log-driver": "json-file",
-  	"log-opts": {
-	  "max-size": "5m",
-	  "max-file": "3"
-  }
+	"log-opts": {
+		"max-size": "5m",
+		"max-file": "3"
+	}
 }' > /etc/docker/daemon.json
 systemctl restart docker
 
