@@ -16,13 +16,12 @@ cat <<EOF
 
 3 - Criar um deployment chamado "cgi" com a imagem "hectorvido/sh-cgi" e um service.
 	3.1 - O deployment deverá possuir 4 réplicas.
-	3.2 - O pod deverá escutar na porta 9090.
-	3.3 - O serviço responderá internamente através da porta 80.
-	3.3 - O serviço permitirá acessar o pod externamente pela porta 30000
+	3.2 - O serviço responderá internamente através da porta 9090.
 
-4 - Atualizar o deployment "cgi" para a imagem "hectorvido/sh-cgi:v2".
-	4.1 - O histórico da atualização precisa estar disponível para consulta.
-	4.2 - Após atualizar, faça rollback para a versão anterior.
+4 - Criar um pod baseado em nginx:alpine
+	4.1 - Atualizar o deployment para a imagem "hectorvido/sh-cgi:v2"
+	4.2 - A atualização deverá ficar guardada no histórico
+	4.2 - Faça rollback para a versão anterior.
 
 5 - Criar um pod de "memcached:alpine" para cada "worker" do cluster.
 	5.1 - Caso um novo "worker" seja adicionado ao cluster, uma réplica
