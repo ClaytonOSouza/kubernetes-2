@@ -10,9 +10,9 @@ cat <<EOF
 		1.2 - node1....172.27.11.20
 		1.3 - node2....172.27.11.30
 	Obs: SSH através do usuário "root" está liberado entre as máquinas citadas.
+	O namespace deverá ser sempre o "default" a não ser que especificado.
 
 2 - Provisionar um pod chamado "apache" com a imagem "httpd:alpine"
-  2.1 - O pode deverá responder na porta 8080.
 
 3 - Criar um deployment chamado "cgi" com a imagem "hectorvido/sh-cgi" e um service.
 	3.1 - O deployment deverá possuir 4 réplicas.

@@ -4,20 +4,14 @@
 # Se deseja aprender a resolver problemas do cluster não leia este arquivo
 # antes de tentar resolver o problema de comunicação entre os nós.
 
-if [ "$HOST" == 'master']; then
-	sed -i 's,/etc/kubernetes/manifests,/etc/kubernete/manifest,' /var/lib/kubelet/config.yaml
-	systemctl daemon-reload
-	systemctl restart kubelet
-fi
+while [ "$(kubectl get nodes --no-headers | wc -l)" -lt 3 ]; do
+  sleep 1
+done
 
-if [ "$HOST" == 'node1' ]; then
-	systemctl stop kubelet
-	systemctl daemon-reload
-	rm -rf /lib/systemd/system/kubelet.service
-fi
+ssh -o stricthostkeychecking=no root@172.27.11.20 "systemctl stop kubelet && systemctl daemon-reload && rm -rf /lib/systemd/system/kubelet.service"
+ssh -o stricthostkeychecking=no root@172.27.11.30 "sed -i 's/systemd/cgroupfs/' /var/lib/kubelet/kubeadm-flags.env && systemctl daemon-reload && systemctl restart kubelet"
 
-if [ "$HOST" == 'node2' ]; then
-	sed -i 's/systemd/cgroupfs/' /var/lib/kubelet/kubeadm-flags.env
-	systemctl daemon-reload
-	systemctl restart kubelet
-fi
+sed -i 's,/etc/kubernetes/manifests,/etc/kubernete/manifest,' /var/lib/kubelet/config.yaml
+systemctl daemon-reload
+systemctl restart kubelet
+chmod -x $(which kubectl)
