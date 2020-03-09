@@ -3,9 +3,8 @@
 
 vms = {
   'master' => {'memory' => '2048', 'cpus' => 2, 'ip' => '10', 'provision' => 'master.sh'},
-  'node1' => {'memory' => '1024', 'cpus' => 1, 'ip' => '20', 'provision' => 'minion.sh'},
-  'node2' => {'memory' => '1024', 'cpus' => 1, 'ip' => '30', 'provision' => 'minion.sh'},
-  'storage' => {'memory' => '512', 'cpus' => 1, 'ip' => '40', 'provision' => 'storage.sh'}
+  'node1' => {'memory' => '1024', 'cpus' => 1, 'ip' => '20', 'provision' => 'node.sh'},
+  'node2' => {'memory' => '1024', 'cpus' => 1, 'ip' => '30', 'provision' => 'node.sh'}
 }
 
 Vagrant.configure('2') do |config|

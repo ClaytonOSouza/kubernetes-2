@@ -11,6 +11,6 @@ curl -s https://docs.projectcalico.org/manifests/calico.yaml > /root/calico.yml
 sed -i 's?192.168.0.0/16?10.244.0.0/16?g' /root/calico.yml
 kubectl apply -f /root/calico.yml
 
-cp /vagrant/tasks.sh /usr/local/bin/k8s-tasks
-cp /vagrant/check.sh /usr/local/bin/k8s-check
+cp /vagrant/files/tasks.sh /usr/local/bin/k8s-tasks
+cp /vagrant/files/check.sh /usr/local/bin/k8s-check
 chmod +x /usr/local/bin/k8s-*
