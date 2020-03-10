@@ -20,19 +20,29 @@ echo_success 'Os três nodes estão respondendo!\n'
 echo 'Task 2 - Pod chamado apache...'
 kubectl -n default describe pod apache > /tmp/task2 2> /dev/null
 test -z "$(cat /tmp/task2)" && echo_fail 'não conseguimos encontrar um pod chamado "apache".'
-grep -E 'Status: *Running' /tmp/task2
+grep -E 'Status: *Running' /tmp/task2 > /dev/null
 test "0" -ne "$?" && echo_fail 'o pod parece não estar rodando.'
 grep -E 'Image:.* httpd:alpine' /tmp/task2 > /dev/null
 test "0" -ne "$?" && echo_fail 'a imagem do pod não é httpd:alpine.'
 echo_success 'O pod está configurado corretamente!\n'
 
-echo 'Task 3 - Deploy chamado cgi...'
-kubectl -n default describe deploy cgi > /tmp/task3 2> /dev/null
-test -z "$(cat /tmp/task3)" && echo_fail 'não conseguimos encontrar um deploy chamado "cgi".'
-grep -Ew 'Replicas:.*4 available' /tmp/task3 > /dev/null
+echo 'Task 3 - Deploy e serviço chamado cgi...'
+kubectl -n default describe deploy cgi > /tmp/task3-1 2> /dev/null
+test -z "$(cat /tmp/task3-1)" && echo_fail 'não conseguimos encontrar um deploy chamado "cgi".'
+grep -Ew 'Replicas:.*4 available' /tmp/task3-1 > /dev/null
 test "0" -ne "$?" && echo_fail 'parece que não há 4 replicas funcionando.'
-grep -E 'Image: *hectorvido/sh-cgi$' /tmp/task3 > /dev/null
-test "0" -ne "$?" && echo_fail 'a imagem do pod não é hectorvido/sh-cgi.'
-grep -E 'Ports: *9090$' /tmp/task3 > /dev/null
-test "0" -ne "$?" && echo_fail 'a porta 9090 parece não estar aberta.'
-echo_success 'O pod está configurado corretamente!\n'
+grep -E 'Image: *hectorvido/sh-cgi$' /tmp/task3-1 > /dev/null
+test "0" -ne "$?" && echo_fail 'a imagem utilizada não é hectorvido/sh-cgi.'
+kubectl -n default describe svc cgi > /tmp/task3-2 2> /dev/null
+test -z "$(cat /tmp/task3-2)" && echo_fail 'não conseguimos encontrar um serviço chamado "cgi".'
+grep -E 'Port:.*9090/TCP' /tmp/task3-2 > /dev/null
+test "0" -ne "$?" && echo_fail 'a porta 9090 parece não estar aberta no serviço "cgi".'
+curl --connect-timeout 2 -s $(grep 'IP:' /tmp/task3-2 | grep -Eo '([0-9]{1,3}\.){3}[0-9]{1,3}'):9090 > /dev/null
+test "0" -ne "$?" && echo_fail 'a conexão com a aplicação na porta 9090 parece estar com problemas.'
+echo_success 'O pod e o serviço estão configurados corretamente!\n'
+
+echo 'Task 4 - Deploy chamado nginx...'
+kubectl -n default describe deploy nginx > /tmp/task4-1 2> /dev/null
+test -z "$(cat /tmp/task4-1)" && echo_fail 'não conseguimos encontrar um deploy chamado "nginx".'
+grep -E 'Image: *nginx:alpine$' /tmp/task4-1 > /dev/null
+test "0" -ne "$?" && echo_fail 'a imagem utilizada não é nginx:alpine.'
