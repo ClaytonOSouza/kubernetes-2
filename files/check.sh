@@ -44,5 +44,10 @@ echo_success 'O pod e o serviço estão configurados corretamente!\n'
 echo 'Task 4 - Deploy chamado nginx...'
 kubectl -n default describe deploy nginx > /tmp/task4-1 2> /dev/null
 test -z "$(cat /tmp/task4-1)" && echo_fail 'não conseguimos encontrar um deploy chamado "nginx".'
+kubectl get rs | grep nginx- | cut -d' ' -f1 | xargs kubectl describe rs | grep -E 'Image: *nginx:alpine$' > /dev/null
+test "0" -ne "$?" && echo_fail ' versão com nginx:alpine não encontrada.'
+kubectl get rs | grep nginx- | cut -d' ' -f1 | xargs kubectl describe rs | grep -E 'Image: *nginx:perl$' > /dev/null
+test "0" -ne "$?" && echo_fail ' versão com nginx:perl não encontrada.'
 grep -E 'Image: *nginx:alpine$' /tmp/task4-1 > /dev/null
 test "0" -ne "$?" && echo_fail 'a imagem utilizada não é nginx:alpine.'
+echo_success 'O deploy foi atualizado e recuperado corretamente!\n'
