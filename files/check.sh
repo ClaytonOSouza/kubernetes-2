@@ -51,3 +51,11 @@ test "0" -ne "$?" && echo_fail ' versão com nginx:perl não encontrada.'
 grep -E 'Image: *nginx:alpine$' /tmp/task4-1 > /dev/null
 test "0" -ne "$?" && echo_fail 'a imagem utilizada não é nginx:alpine.'
 echo_success 'O deploy foi atualizado e recuperado corretamente!\n'
+
+echo 'Task 5 - Pods em todos os workers...'
+kubectl -n default describe ds > /tmp/task5 2> /dev/null
+test -z "$(cat /tmp/task5)" && echo_fail 'não encontramos o objeto ideal para os pods.'
+grep -E 'Image: *memcached:alpine$' /tmp/task5 > /dev/null
+test "0" -ne "$?" && echo_fail 'não encontramos os pods baseados em "memcached:alpine".'
+kubectl describe ds -n default | grep -E 'Image: *memcached:alpine$' > /dev/null
+echo_success 'O replicaset foi criado corretamente!\n'
