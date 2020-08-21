@@ -7,10 +7,10 @@ cp /vagrant/files/id_rsa.pub /root/.ssh/authorized_keys
 
 HOSTS=$(head -n7 /etc/hosts)
 echo -e "$HOSTS" > /etc/hosts
-echo '172.27.11.10 master.k8s.com' >> /etc/hosts
-echo '172.27.11.20 minion1.k8s.com' >> /etc/hosts
-echo '172.27.11.30 minion2.k8s.com' >> /etc/hosts
-echo '172.27.11.40 storage.k8s.com' >> /etc/hosts
+echo '172.27.11.10 master.example.com' >> /etc/hosts
+echo '172.27.11.20 minion1.example.com' >> /etc/hosts
+echo '172.27.11.30 minion2.example.com' >> /etc/hosts
+echo '172.27.11.40 storage.example.com' >> /etc/hosts
 
 if [ "$HOSTNAME" == "storage" ]; then
 	exit
@@ -23,12 +23,10 @@ update-alternatives --set ebtables /usr/sbin/ebtables-legacy
 
 apt-get update
 apt-get install -y apt-transport-https ca-certificates curl gnupg2 software-properties-common dirmngr vim telnet curl nfs-common
-curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -
 curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 echo 'deb https://apt.kubernetes.io/ kubernetes-xenial main' > /etc/apt/sources.list.d/kubernetes.list
-echo "deb [arch=amd64] https://download.docker.com/linux/debian $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
 apt-get update
-apt-get install -y docker-ce docker-ce-cli containerd.io kubelet kubeadm kubectl
+apt-get install -y docker.io kubelet kubeadm kubectl
 apt-mark hold kubelet kubeadm kubectl
 
 echo '{

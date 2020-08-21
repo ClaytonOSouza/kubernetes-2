@@ -4,6 +4,7 @@ A intenção deste repositório é fornecer um **Vagrantfile** capaz de criar um
 Abaixo há uma pequena introdução a respeito do universo dos contâineres e o papel do Kubernetes (k8s) neste universo, logo após, dezenas de objetos são exemplificados com breves descrições de seu uso.
 
 ## Container
+
 É uma espécie de virtualização, o encapsulamento e isolamento de recursos controlados a nível de processo. Uma imagem contendo todas as dependências da aplicação, podendo rodar independete de qualquer sistema. Uma aplicação auto-contida.
 
 - **cgroups** - Permite ao host compartilhar e limitar recursos que cada processo utilizará. Limita o quanto pode usar.
@@ -15,6 +16,7 @@ Abaixo há uma pequena introdução a respeito do universo dos contâineres e o 
 É a únidade mínima do Kubernetes, pode conter um ou mais contêineres. Os pods agrupam lógicamente os contêineres em termos de rede e hardware. O processo entre estes contêineres pode acontecer sem a alta latência de ter que atravessar uma rede. Assim como dados comuns podem ser guardados em volumes que são compartilhados entre esses contêineres.
 
 ## Orquestrador
+
 Microserviços são construídos em cima de uma rígida organização. Com o tempo, alocação de recursos, self-healing, táticas de deploy, proximidade de serviços, movimentação de containers e rollbacks começam a aumentar a complexibilidade de uma infraestrutura. É neste momento que um orquestrador é necessário, ou seja, o Kubernetes.
 
 # Instalação
