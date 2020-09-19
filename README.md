@@ -46,7 +46,7 @@ Adicione o pod ao Kubernetes executando o seguinte comando:
 kubectl create -f cgi-pod.yml
 kubectl get pods
 kubectl describe pods/cgi-pod
-kubectl get pod cgi-pod --template={{.status.podIP}}
+kubectl get pod cgi-pod --template='{{.status.podIP}}'
 ```
 
 Isto criará um pod com um contêiner chamado **cgi-pod**.
@@ -135,7 +135,7 @@ kubectl create cm --from-file lighttpd.conf lighttpd-config
 
 **configmap.yml**
 
-```
+```yaml
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -183,7 +183,8 @@ echo -n 'kub3rn3ts' | base64 #a3ViM3JuM3Rz
 ```
 
 **secret.yml**
-```
+
+```yml
 apiVersion: v1
 kind: Secret
 metadata:
@@ -200,7 +201,7 @@ data:
 
 Existem várias formas de tornar o secret disponível dentro do pod, um dos exemplos é como variáveis de ambiente e o outro como um arquivo em um volume:
 
-```
+```yml
 apiVersion: v1
 kind: Pod
 metadata:
